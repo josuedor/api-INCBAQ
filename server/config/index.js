@@ -6,6 +6,12 @@ const config = {
     db: {
         url: process.env.DBURL
     },
+    connection: {
+        host : process.env.DBURL,
+        user : process.env.USERDB,
+        password : process.env.PASSDB,
+        database : process.env.DATABASE
+    },
     cors: {
         origin: process.env.ORIGIN || '*',
         credentials: process.env.CREDENTIALS
