@@ -1,0 +1,29 @@
+{
+  "name": "api-incbaq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josuedor/api-INCBAQ.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josuedor/api-INCBAQ/issues"
+  },
+  "homepage": "https://github.com/josuedor/api-INCBAQ#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dotenv": "^4.0.0",
+    "jsonwebtoken": "^8.1.1",
+    "validator": "^9.4.0"
+  }
+}
