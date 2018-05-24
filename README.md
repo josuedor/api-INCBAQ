@@ -21,4 +21,3 @@ ORIGIN=*
 CREDENTIALS=true
 
 JWTSECRET=helloworld
-
