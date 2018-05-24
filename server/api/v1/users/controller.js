@@ -2,118 +2,83 @@ const jwt = require('jsonwebtoken');
 const config = require('./../../../config');
 const Model = require('./model');
 
-exports.all = (req, res, next) => {
-    const limit = Number(req.query.limit) || 10;
-    const skip = Number(req.query.skip) || 0;
-    
-    const items = Model
-        .find()
-        .skip(skip)
-        .limit(limit);
-    
-    const count = Model.count();
-    
-    Promise.all([items.exec(), count.exec()])
-        .then( data => {
-            res.json({
-                data: data[0],
-                limit,
-                skip,
-                count: data[1]
-            })
-        })
-        .catch( err => {
-            next(new Error(err));
-        });
+/* Save a user */
+exports.create = function (req, res) {
+	new Model.User({
+		password: req.body.password,
+		email: req.body.email,
+        name: req.body.name,
+        enable: 1
+	}).save()
+		.then(function (user) {
+			res.json(user);
+		}).catch(function (error) {
+			console.log(error);
+			res.send('An error occured');
+		});
 };
 
-
-exports.create = (req, res, next) => {
-    const body = req.body;
-    
-    let document = new Model({
-        firstname: body.firstname,
-        lastname: body.lastname,
-        email: body.email,
-        password: body.password,
-    });
-    
-    document.save()
-        .then( doc => {
-            const token = jwt.sign({
-                    _id: doc._id
-                },
-                config.jwt.secret,
-                {
-                    algorithm: 'HS256',
-                    expiresIn: '1h'
-                });
-            res.json({
-                user: doc,
-                token
-            });
-        })
-        .catch( err => {
-            next(new Error(err));
-        });
+/* Get all users */
+exports.all = function (req, res) {
+	new Model.User().fetchAll()
+		.then(function (users) {
+			res.json(users);
+		}).catch(function (error) {
+			console.log(error);
+			res.send('An error occured');
+		});
 };
 
+/* Delete a user */
+exports.delete = function (req, res) {
+	let userId = req.params.id;
+	new Model.User().where('id', userId)
+		.destroy()
+		.catch(function (error) {
+			console.log(error);
+			res.send('An error occured');
+		});
+};
 
-exports.login = (req, res, next) => {
+/* Get a user */
+exports.profile = function (req, res) {
+	const userId = req.params.id;
+	new Model.User().where('id', userId)
+		.fetch()
+		.then(function (user) {
+			res.json(user);
+		}).catch(function (error) {
+			console.log(error);
+			res.send('An error occured');
+		});
+};
+
+exports.login = function (req, res) {
     const email = req.body.email;
     const password = req.body.password;
     
-    Model.findOne({ email: email })
-        .then(doc => {
-            if(doc){
-                // Compare Password
-                doc.comparePassword(password, (err, match) => {
-                    if (err) {
-                        next(new Error(err));
-                    } else {
-                        if (match) {
-                            const token = jwt.sign({
-                                    _id: doc._id
-                                },
-                                config.jwt.secret,
-                                {
-                                    algorithm: 'HS256',
-                                    expiresIn: '1h'
-                                });
-                            res.json({
-                                user: doc,
-                                token
-                            });
-                        } else {
-                            res.status(401).json({
-                                message: "Unauthorized"
-                            });
-                        }
+	new Model.User().where('email', email)
+		.fetch()
+		.then(function (user) {
+            if(user){
+                new Model.User().validPassword(password, user)
+                .then(function (valid){
+                    console.log(valid)
+                    if(valid){
+                        res.json(user.omit(password));
+                    }else{
+                        res.status(401).json({
+                            message: "No se encontro usuario con esas credenciales."
+                        });
                     }
+                })
+             }else{
+                res.status(401).json({
+                    message: "No se encontro usuario con esas credenciales."
                 });
-            }else{
-                res.status(404).json({
-                    message: "Document not found"
-                });
-            }
-        })
-        .catch( err => {
-            next(new Error(err));
-        });
-};
-
-exports.profile = (req, res, next) => {
-    Model.findById(req.decoded._id)
-        .then( doc => {
-            if(doc){
-               res.json(doc);
-            }else{
-                res.status(404).json({
-                    message: "Document not found"
-                });
-            }
-        })
-        .catch( err => {
-            next(new Error(err));
-        });
+             }
+		}).catch(function (error) {
+			console.log(error);
+			res.send('An error occured');
+		});
 };

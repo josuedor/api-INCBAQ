@@ -1,21 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-//const mongoose = require('mongoose');
 const cors = require('cors');
 const config = require('./config');
-
-//-- BD
-let knex = require('knex')({
-    client: 'mysql',
-    connection: {
-      host : config.connection.host,
-      user : config.connection.user,
-      password : config.connection.password,
-      database : config.connection.database
-    }
-  });
-  let bookshelf = require('bookshelf')(knex);
-  // BD --
 
 const app = express();
 
