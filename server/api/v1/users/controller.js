@@ -11,7 +11,18 @@ exports.create = function (req, res) {
         enable: 1
 	}).save()
 		.then(function (user) {
-			res.json(user);
+			const token = jwt.sign({
+				_id: user.id
+			},
+			config.jwt.secret,
+			{
+				algorithm: 'HS256',
+				expiresIn: '1h'
+			});
+			res.json({
+				user: user,
+				token
+			});
 		}).catch(function (error) {
 			console.log(error);
 			res.send('An error occured');
@@ -42,7 +53,7 @@ exports.delete = function (req, res) {
 
 /* Get a user */
 exports.profile = function (req, res) {
-	const userId = req.params.id;
+	const userId = req.decoded._id;
 	new Model.User().where('id', userId)
 		.fetch()
 		.then(function (user) {
@@ -65,7 +76,18 @@ exports.login = function (req, res) {
                 .then(function (valid){
                     console.log(valid)
                     if(valid){
-                        res.json(user.omit(password));
+						const token = jwt.sign({
+							_id: user.id
+						},
+						config.jwt.secret,
+						{
+							algorithm: 'HS256',
+							expiresIn: '1h'
+						});
+						res.json({
+							user: user, //user.omit("password"),
+							token
+						});
                     }else{
                         res.status(401).json({
                             message: "No se encontro usuario con esas credenciales."

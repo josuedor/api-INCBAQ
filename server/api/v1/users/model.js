@@ -4,6 +4,7 @@ var bookshelf = require('./../../../config/db').bookshelf;
 
 var User = bookshelf.Model.extend({
     tableName: 'users',
+    hasTimestamps: true,
     initialize: function() {
         //this.constructor.__super__.initialize.apply(this, arguments);
         this.on('saving', this.hashPassword, this);
