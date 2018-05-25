@@ -10,7 +10,7 @@ const auth = require('./../auth');
  */
 
 router.route('/')
-    .get(controller.all)
+    .get(auth, controller.all)
 
 router.route('/signup')
     .post(controller.create)

@@ -14,7 +14,7 @@ exports.create = function (req, res) {
 	}).save()
 		.then(function (user) {
 			const token = jwt.sign({
-				_id: user.CODUSUARIO
+				_id: user.id
 			},
 			config.jwt.secret,
 			{
@@ -36,9 +36,27 @@ exports.create = function (req, res) {
 
 /* Get all users */
 exports.all = function (req, res) {
-	new Model.User().fetchAll()
-		.then(function (users) {
-			res.json(users);
+	const userId = req.decoded._id;
+	
+	new Model.User().where('CODUSUARIO', userId)
+		.fetch()
+		.then(function (user) {
+			if(user.attributes.TIPO_USUARIO == "admin"){
+				new Model.User().fetchAll()
+				.then(function (users) {
+					res.json(users);
+				}).catch(function (error) {
+					console.log(error);
+					res.status(401).json({
+						message: "An error occured.",
+						"error": error.message
+					});
+				});
+			}else{
+				res.status(401).json({
+					message: "No eres admin."
+				});
+			}
 		}).catch(function (error) {
 			console.log(error);
 			res.status(401).json({
@@ -91,7 +109,7 @@ exports.login = function (req, res) {
                     console.log(valid)
                     if(valid){
 						const token = jwt.sign({
-							_id: user.CODUSUARIO
+							_id: user.id
 						},
 						config.jwt.secret,
 						{

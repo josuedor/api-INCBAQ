@@ -9,7 +9,7 @@ exports.create = function (req, res) {
 		DESCRIPCION: req.body.descripcion,
 		CODPREDIO: req.body.codpredio,
 		CALIFICACION: req.body.calificacion,
-		USUARIO: req.body.usuario
+		USUARIO: req.decoded._id // tomado del token
 	}).save()
 		.then(function (incidencias) {
 			res.json(incidencias);

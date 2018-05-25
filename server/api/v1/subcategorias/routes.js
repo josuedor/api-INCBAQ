@@ -12,6 +12,6 @@ router.route('/')
     .get(controller.all)
 
 router.route('/')
-    .post(controller.create)
+    .post(auth, controller.create)
     
 module.exports = router;
