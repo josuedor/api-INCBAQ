@@ -1,13 +1,20 @@
 var Promise  = require('bluebird');
 var bcrypt   = Promise.promisifyAll(require('bcryptjs'));
 var bookshelf = require('./../../../config/db').bookshelf;
+let Incidencia = require('./../incidencias/model');
+
+bookshelf.plugin('registry')
 
 var User = bookshelf.Model.extend({
     tableName: 'TUSUARIO',
     hasTimestamps: true,
+    idAttribute: 'CODUSUARIO',
     initialize: function() {
         //this.constructor.__super__.initialize.apply(this, arguments);
         this.on('saving', this.hashPassword, this);
+    },
+    incidencias: function() {
+        return this.hasMany("Incidencia");
     },
     hashPassword: function(model, attrs, options) {
         return new Promise(function(resolve, reject) {
@@ -35,5 +42,5 @@ var User = bookshelf.Model.extend({
 });
 
 module.exports = {
-    User: User
+    User: bookshelf.model('User', User)
 };
