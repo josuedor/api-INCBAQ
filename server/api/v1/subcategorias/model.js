@@ -2,8 +2,8 @@ var Promise  = require('bluebird');
 var bcrypt   = Promise.promisifyAll(require('bcryptjs'));
 var bookshelf = require('./../../../config/db').bookshelf;
 
-var Categoria = bookshelf.Model.extend({
-    tableName: 'DCATEGORIA',
+var SubCategoria = bookshelf.Model.extend({
+    tableName: 'DSUBCATEGORIA',
     hasTimestamps: true,
     initialize: function() {
         //this.constructor.__super__.initialize.apply(this, arguments);
@@ -15,5 +15,5 @@ var Categoria = bookshelf.Model.extend({
 });
 
 module.exports = {
-	Categoria: Categoria
+	Categoria: SubCategoria
 };
