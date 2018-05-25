@@ -13,5 +13,8 @@ router.route('/')
 
 router.route('/')
     .post(auth, controller.create)
+
+router.route('/categoria')
+    .post(auth, controller.categoria)
     
 module.exports = router;

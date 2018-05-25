@@ -35,3 +35,25 @@ exports.all = function (req, res) {
 			});
 		});
 };
+
+/* Get a incidencias x categorias */
+exports.categoria = function (req, res) {
+	const codcategoria = req.body.codcategoria || req.query.codcategoria;
+	if (codcategoria) {
+		new Model.Incidencia().where('CODCATEGORIA', codcategoria)
+		.fetchAll({withRelated: ['USUARIO', 'CATEGORIA', 'PREDIO']})
+		.then(function (incidencias) {
+			res.json(incidencias);
+		}).catch(function (error) {
+			console.log(error);
+			res.status(401).json({
+				message: "An error occured.",
+				"error": error.message
+			});
+		});
+	} else {
+		res.status(401).json({
+			message: "Debe enviar la categoria para consumir el servicio."
+		});
+	}
+};
