@@ -3,7 +3,7 @@ var bcrypt   = Promise.promisifyAll(require('bcryptjs'));
 var bookshelf = require('./../../../config/db').bookshelf;
 
 var User = bookshelf.Model.extend({
-    tableName: 'users',
+    tableName: 'TUSUARIO',
     hasTimestamps: true,
     initialize: function() {
         //this.constructor.__super__.initialize.apply(this, arguments);
@@ -11,9 +11,10 @@ var User = bookshelf.Model.extend({
     },
     hashPassword: function(model, attrs, options) {
         return new Promise(function(resolve, reject) {
-            bcrypt.hash(model.attributes.password, 10, function(err, hash) {
+            //console.log(model.attributes.PASSWORD);
+            bcrypt.hash(model.attributes.PASSWORD, 10, function(err, hash) {
                 if( err ) reject(err);
-                model.set('password', hash);
+                model.set('PASSWORD', hash);
                 resolve(hash); // data is created only after this occurs
             });
         });
@@ -34,5 +35,5 @@ var User = bookshelf.Model.extend({
 });
 
 module.exports = {
-	User: User
+    User: User
 };

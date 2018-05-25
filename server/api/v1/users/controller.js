@@ -5,14 +5,17 @@ const Model = require('./model');
 /* Save a user */
 exports.create = function (req, res) {
 	new Model.User({
-		password: req.body.password,
-		email: req.body.email,
-        name: req.body.name,
-        enable: 1
+		//CODUSUARIO: req.body.codusuario,
+		NOMBRES: req.body.nombres,
+		EMAIL: req.body.email,
+		PASSWORD: req.body.password,
+		TIPO_USUARIO: req.body.tipo_usuario,
+		ESTADO: 1,
+		
 	}).save()
 		.then(function (user) {
 			const token = jwt.sign({
-				_id: user.id
+				_id: user.CODUSUARIO
 			},
 			config.jwt.secret,
 			{
@@ -54,7 +57,7 @@ exports.delete = function (req, res) {
 /* Get a user */
 exports.profile = function (req, res) {
 	const userId = req.decoded._id;
-	new Model.User().where('id', userId)
+	new Model.User().where('CODUSUARIO', userId)
 		.fetch()
 		.then(function (user) {
 			res.json(user);
@@ -68,7 +71,7 @@ exports.login = function (req, res) {
     const email = req.body.email;
     const password = req.body.password;
     
-	new Model.User().where('email', email)
+	new Model.User().where('EMAIL', email)
 		.fetch()
 		.then(function (user) {
             if(user){
@@ -77,7 +80,7 @@ exports.login = function (req, res) {
                     console.log(valid)
                     if(valid){
 						const token = jwt.sign({
-							_id: user.id
+							_id: user.CODUSUARIO
 						},
 						config.jwt.secret,
 						{
