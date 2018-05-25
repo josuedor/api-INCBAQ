@@ -22,7 +22,7 @@ var User = bookshelf.Model.extend({
     validPassword: function(password, user) {
         //console.log(user.attributes.password)
         return new Promise(function(resolve, reject) {
-            bcrypt.compare(password, user.attributes.password, function (err, match) {
+            bcrypt.compare(password, user.attributes.PASSWORD, function (err, match) {
             if(err) reject(err);
             //console.log(match)
             resolve(match); //? true : false;

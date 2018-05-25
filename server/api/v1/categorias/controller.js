@@ -13,7 +13,10 @@ exports.create = function (req, res) {
 			res.json(categoria);
 		}).catch(function (error) {
 			console.log(error);
-			res.send('An error occured');
+			res.status(401).json({
+				message: "An error occured.",
+				"error": error.message
+			});
 		});
 };
 
@@ -24,7 +27,10 @@ exports.all = function (req, res) {
 			res.json(categorias);
 		}).catch(function (error) {
 			console.log(error);
-			res.send('An error occured');
+			res.status(401).json({
+				message: "An error occured.",
+				"error": error.message
+			});
 		});
 };
 

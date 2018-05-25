@@ -10,8 +10,7 @@ exports.create = function (req, res) {
 		EMAIL: req.body.email,
 		PASSWORD: req.body.password,
 		TIPO_USUARIO: req.body.tipo_usuario,
-		ESTADO: 1,
-		
+		ESTADO: 1
 	}).save()
 		.then(function (user) {
 			const token = jwt.sign({
@@ -28,7 +27,10 @@ exports.create = function (req, res) {
 			});
 		}).catch(function (error) {
 			console.log(error);
-			res.send('An error occured');
+			res.status(401).json({
+				message: "An error occured.",
+				"error": error.message
+			});
 		});
 };
 
@@ -39,7 +41,10 @@ exports.all = function (req, res) {
 			res.json(users);
 		}).catch(function (error) {
 			console.log(error);
-			res.send('An error occured');
+			res.status(401).json({
+				message: "An error occured.",
+				"error": error.message
+			});
 		});
 };
 
@@ -50,7 +55,10 @@ exports.delete = function (req, res) {
 		.destroy()
 		.catch(function (error) {
 			console.log(error);
-			res.send('An error occured');
+			res.status(401).json({
+				message: "An error occured.",
+				"error": error.message
+			});
 		});
 };
 
@@ -63,7 +71,10 @@ exports.profile = function (req, res) {
 			res.json(user);
 		}).catch(function (error) {
 			console.log(error);
-			res.send('An error occured');
+			res.status(401).json({
+				message: "An error occured.",
+				"error": error.message
+			});
 		});
 };
 
@@ -104,6 +115,9 @@ exports.login = function (req, res) {
              }
 		}).catch(function (error) {
 			console.log(error);
-			res.send('An error occured');
+			res.status(401).json({
+				message: "An error occured.",
+				"error": error.message
+			});
 		});
 };
